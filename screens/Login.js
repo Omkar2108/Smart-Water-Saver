@@ -8,10 +8,12 @@ import {
   Image
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import React from "react";
+import React, { useState } from "react";
 
 
 function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
   return (
@@ -35,11 +37,13 @@ function Login() {
                 style={styles.input}
                 placeholder="username"
                 placeholderTextColor="black"
+                onChangeText={(text)=> setUsername(text)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="password"
                 placeholderTextColor="black"
+                onChangeText={(text)=>setPassword(text)}
               />
               <TouchableOpacity
                 style={styles.button}
@@ -69,24 +73,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 180,
     backgroundColor: "#1f7882",
-    borderRadius: 10
-  },
-  backgrad: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 6
-    },
-    shadowOpacity: 0.26,
-    shadowRadius: 11,
-    position: "absolute",
-    elevation: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    justifyContent: "space-between",
-    width: "100%",
-    height: 265,
-    backgroundColor: "#1f7882"
+    borderTopRightRadius:18,
+    borderTopLeftRadius:18
   },
   input: {
     shadowColor: "#000000",
@@ -119,13 +107,15 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.56,
     shadowRadius: 13,
-    height: 480,
+    height: 580,
     textAlign: "center",
     marginTop: 100,
     marginLeft: 40,
     marginRight: 40,
     borderRadius: 20,
-    backgroundColor: "#F9F7F7"
+    backgroundColor: "#F9F7F7",
+    borderColor:'#1f7882',
+    borderWidth:1.5
   },
   flexing: {
     height: 320,
@@ -176,7 +166,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#ffff",
     fontSize: 15,
-    marginTop: 11
+    marginTop: 7,
+    alignSelf:'center',
+    paddingTop:5
   }
 });
 

@@ -219,8 +219,8 @@ const styles = StyleSheet.create({
       marginTop: 11
     },
     authButten: {
-      height: "5%",
-      width: "5%"
+      height: 50,
+      width: 50
     },
     auth: {
       paddingLeft: 50,
