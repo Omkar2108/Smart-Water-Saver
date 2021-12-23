@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState } from "react";
+// import firebase from "react-native-firebase";
 
 
 function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+
 
   return (
     <KeyboardAwareScrollView style={{ flex: 1 }}>
@@ -35,15 +37,17 @@ function Login() {
             <View>
               <TextInput
                 style={styles.input}
-                placeholder="username"
+                placeholder="Email"
                 placeholderTextColor="black"
-                onChangeText={(text)=> setUsername(text)}
+                onChangeText={(text)=> setEmail(text)}
+                // textContentType="email"
               />
               <TextInput
                 style={styles.input}
-                placeholder="password"
+                placeholder="Password"
                 placeholderTextColor="black"
                 onChangeText={(text)=>setPassword(text)}
+                // textContentType="password"
               />
               <TouchableOpacity
                 style={styles.button}

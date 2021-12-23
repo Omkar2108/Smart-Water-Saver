@@ -1,8 +1,27 @@
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Firebase from '../firebase';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import Constant from 'expo-constants';
 
 function SignUp() {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+    const handleSubmit = async () =>{
+        if(email.length> 6 && password.length>6){
+          const auth = getAuth();
+          await createUserWithEmailAndPassword(auth, email, password)
+          .then((res)=>{
+            console.log(res);
+          }).catch((err)=>{
+            console.log(err);
+          });
+        }  
+    }
+
     return (
         <KeyboardAwareScrollView>
         <View style={styles.container}>
@@ -22,17 +41,21 @@ function SignUp() {
               <View>
                 <TextInput
                   style={styles.input}
-                  placeholder="username"
+                  placeholder="Email"
                   placeholderTextColor="black"
+                  onChangeText={(text)=>setEmail(text)}
+                  // textContentType="email"
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="password"
                   placeholderTextColor="black"
+                  onChangeText={(text)=>setPassword(text)}
+                  // textContentType="Password"
                 />
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => navigation.navigate("Login")}
+                  onPress={() => handleSubmit()}
                 >
                   <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
                 </TouchableOpacity>
@@ -109,23 +132,23 @@ const styles = StyleSheet.create({
       backgroundColor: "#1f7882",
       borderRadius: 10
     },
-    backgrad: {
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 6
-      },
-      shadowOpacity: 0.26,
-      shadowRadius: 11,
-      position: "absolute",
-      elevation: 20,
-      paddingTop: 10,
-      paddingBottom: 10,
-      justifyContent: "space-between",
-      width: "100%",
-      height: 220,
-      backgroundColor: "#1f7882"
-    },
+    // backgrad: {
+    //   shadowColor: "#000",
+    //   shadowOffset: {
+    //     width: 0,
+    //     height: 6
+    //   },
+    //   shadowOpacity: 0.26,
+    //   shadowRadius: 11,
+    //   position: "absolute",
+    //   elevation: 20,
+    //   paddingTop: 10,
+    //   paddingBottom: 10,
+    //   justifyContent: "space-between",
+    //   width: "100%",
+    //   height: 220,
+    //   backgroundColor: "#1f7882"
+    // },
     input: {
       shadowColor: "#000000",
       shadowOffset: { width: 0, height: 3 },
@@ -151,19 +174,21 @@ const styles = StyleSheet.create({
     },
     box: {
       shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 6
-      },
-      shadowOpacity: 0.56,
-      shadowRadius: 13,
-      height: 600,
-      textAlign: "center",
-      marginTop: 70,
-      marginLeft: 40,
-      marginRight: 40,
-      borderRadius: 20,
-      backgroundColor: "#F9F7F7"
+    shadowOffset: {
+      width: 0,
+      height: 6
+    },
+    shadowOpacity: 0.56,
+    shadowRadius: 13,
+    height: 580,
+    textAlign: "center",
+    marginTop: 100,
+    marginLeft: 40,
+    marginRight: 40,
+    borderRadius: 20,
+    backgroundColor: "#F9F7F7",
+    borderColor:'#1f7882',
+    borderWidth:1.5
     },
     flexing: {
       height: 390,
