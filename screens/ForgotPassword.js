@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.56,
     shadowRadius: 13,
-    height: 580,
+    height: 500,
     textAlign: "center",
     marginTop: 100,
     marginLeft: 40,

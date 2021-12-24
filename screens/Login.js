@@ -1,10 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
-import {  TouchableOpacity, StyleSheet, Text, View, TextInput, Image} from "react-native";
+import {  TouchableOpacity, StyleSheet, Text, View, TextInput, Image, Button} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import Firebase from '../firebase';
 import { showMessage } from "react-native-flash-message";
+import { TouchableNativeFeedback } from "react-native-web";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -16,12 +17,14 @@ function Login() {
   useEffect(async()=>{
     await onAuthStateChanged(auth , (user)=>{
       if(user){
-        console.log(user);
+        // console.log(user);
         showMessage({
           message:'Already Logged In !',
           type:'success',
           icon:'success'
         })
+        setEmail('');
+        setPassword('');
         navigation.navigate("Welcome");
       }
     })
@@ -32,9 +35,9 @@ function Login() {
   const handleSubmit = async () =>{
 
       if(email.length>5 && password.length>5){
-        await signInWithEmailAndPassword(auth, email, password)
+        await signInWithEmailAndPassword(auth, email.toLowerCase(), password)
         .then((res)=>{
-          console.log(res);
+          // console.log(res);
           showMessage({
             message:'Log In Suceessfully!',
             type:'success',
@@ -42,13 +45,15 @@ function Login() {
           })
         })
         .catch((err)=>{
-          console.log(err);
+          // console.log(err);
           showMessage({
             message:err.message,
             type:'danger',
             icon:'danger'
           })
         })
+        setEmail('');
+        setPassword('');
       }else{
         showMessage({
           message:'Enter Email/Password Correctly!',
@@ -66,10 +71,13 @@ function Login() {
         <View style={styles.box}>
           <View style={styles.grad}>
             <View style={styles.imageBox}>
+              <TouchableOpacity
+              onPress={()=>console.log("done")}>
               <Image
                 style={styles.images}
                 source={require("../assets/login-1.png")}
               />
+              </TouchableOpacity>
             </View>
             <Text style={styles.Headerfont}>Welcome Back</Text>
           </View>
@@ -81,6 +89,7 @@ function Login() {
                 placeholder="Email"
                 placeholderTextColor="black"
                 onChangeText={(text)=> setEmail(text)}
+                value={email}
                 // textContentType="email"
               />
               <TextInput
@@ -88,7 +97,9 @@ function Login() {
                 placeholder="Password"
                 placeholderTextColor="black"
                 onChangeText={(text)=>setPassword(text)}
-                // textContentType="password"
+                secureTextEntry={true}
+                value={password}
+                keyboardType="visible-password"
               />
               <TouchableOpacity
                 style={styles.button}
@@ -99,18 +110,21 @@ function Login() {
 
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("SignUp")}
+                onPress={() => {
+                  navigation.navigate("SignUp");
+                  setEmail('');
+                  setPassword('');
+                }}
               >
-                <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
+                <Text style={styles.buttonText}>REGISTER</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.button}
+              {/* <TouchableOpacity
+                // style={styles.button}
                 onPress={() => navigation.navigate("ForgotPassword")}
               >
                 <Text style={styles.buttonText}>FORGOT PASSWORD?</Text>
-              </TouchableOpacity>
-              
+              </TouchableOpacity>               */}
             </View>
           </View>
         </View>

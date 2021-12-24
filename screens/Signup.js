@@ -15,12 +15,12 @@ function SignUp() {
     useEffect(async ()=>{
       await onAuthStateChanged(auth, (user)=>{
         if(user){
-          navigation.navigate("Welcome");
-          showMessage({
+            showMessage({
             message:'Already Logged In !',
             type:'success',
             icon:'success'
           })
+          navigation.navigate("Welcome");
         }
       })
     })
@@ -28,7 +28,7 @@ function SignUp() {
     const handleSubmit = async () =>{
         if(email.length> 6 && password.length>6){
           
-          await createUserWithEmailAndPassword(auth, email, password)
+          await createUserWithEmailAndPassword(auth, email.toLowerCase(), password)
           .then((res)=>{
             // console.log(res);
             showMessage({
@@ -45,12 +45,15 @@ function SignUp() {
               icon:'danger'
             })
           });
+          setEmail('');
+          setPassword('');
         } else{
-          showMessage({
+           { showMessage({
             message: 'Enter correct Email/Password!',
             type:'warning',
             icon:'warning'
-          })
+          })}
+          setPassword('');
         }
     }
 
@@ -76,14 +79,15 @@ function SignUp() {
                   placeholder="Email"
                   placeholderTextColor="black"
                   onChangeText={(text)=>setEmail(text)}
-                  // textContentType="email"
+                  value={email}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="password"
                   placeholderTextColor="black"
                   onChangeText={(text)=>setPassword(text)}
-                  // textContentType="Password"
+                  secureTextEntry={true}   
+                  value={password}               
                 />
                 <TouchableOpacity
                   style={styles.button}
@@ -281,7 +285,9 @@ const styles = StyleSheet.create({
     buttonText: {
       color: "#ffff",
       fontSize: 15,
-      marginTop: 11
+      marginTop: 7,
+      alignSelf:'center',
+      paddingTop:5
     },
     authButten: {
       height: 50,
