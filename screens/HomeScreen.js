@@ -1,6 +1,7 @@
 import { View , Text, Button, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import FadeInView from '../components/fadeInView';
+
 function HomeScreen({ navigation }) {
     return (
         <View style={styles.container}>

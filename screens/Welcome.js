@@ -5,96 +5,71 @@ import {
   Text,
   View,
   TextInput,
-  Image,
-  Modal
+  Image
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import Firebase from '../firebase';
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+function Welcome() {
+  const [limit, setLimit] = useState('');
+  const auth = getAuth();
   const navigation = useNavigation();
-  const [error,setError] = useState(true);
-  const [signIn, setSignIn] = useState(false);
-  const auth = getAuth(Firebase);
-
-  useEffect(async()=>{
-    await onAuthStateChanged(auth , (user)=>{
-      if(user){
-        console.log(user);
-        navigation.navigate("Welcome");
-      }else{
-        console.log("no user");
-      }
-    })
-
-
-  })
 
   const handleSubmit = async () =>{
-      if(email.length>5 && password.length>5){
-        await signInWithEmailAndPassword(auth, email, password)
-        .then((res)=>{
-          console.log(res);
-        })
-        .catch((err)=>{
-          console.log(err);
-        })
-      }    
+
   }
 
+  useEffect(async ()=>{
+    await onAuthStateChanged(auth, (user)=>{
+        if(user){
+            console.log(user);
+        }else{
+            navigation.navigate("Login");
+        }
+    })
+  })
+
+  const handleSignOut = async () =>{
+    
+    await signOut(auth)
+    .then((res)=>{
+        console.log(res);
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+  }
 
   return (
     <KeyboardAwareScrollView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.backgrad}></View>
-        <View style={styles.box}>
-          <View style={styles.grad}>
-            <View style={styles.imageBox}>
-              <Image
-                style={styles.images}
-                source={require("../assets/login-1.png")}
-              />
-            </View>
-            <Text style={styles.Headerfont}>Welcome Back</Text>
-          </View>
+
           <View style={styles.flexing}>
-            <Text style={styles.font}>Please Enter Username and Password</Text>
             <View>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleSignOut() }
+              >
+                <Text style={styles.buttonText}>Logout</Text>
+              </TouchableOpacity>
+
               <TextInput
                 style={styles.input}
-                placeholder="Email"
+                placeholder="Water Limit"
                 placeholderTextColor="black"
-                onChangeText={(text)=> setEmail(text)}
+                onChangeText={(text)=> setLimit(text)}
                 // textContentType="email"
               />
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="black"
-                onChangeText={(text)=>setPassword(text)}
-                // textContentType="password"
-              />
+
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => handleSubmit()}
               >
-                <Text style={styles.buttonText}>L O G I N</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate("ForgotPassword")}
-              >
-                <Text style={styles.buttonText}>Forgot Password?</Text>
+                <Text style={styles.buttonText}>Set Limit</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </View>
     </KeyboardAwareScrollView>
   );
 }
@@ -212,4 +187,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Login;
+export default Welcome;
