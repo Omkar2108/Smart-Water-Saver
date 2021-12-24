@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
-import {  TouchableOpacity, StyleSheet, Text, View, TextInput, Image, Modal, Alert} from "react-native";
+import {  TouchableOpacity, StyleSheet, Text, View, TextInput, Image} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import Firebase from '../firebase';
+import { showMessage } from "react-native-flash-message";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -16,9 +17,12 @@ function Login() {
     await onAuthStateChanged(auth , (user)=>{
       if(user){
         console.log(user);
+        showMessage({
+          message:'Already Logged In !',
+          type:'success',
+          icon:'success'
+        })
         navigation.navigate("Welcome");
-      }else{
-        console.log("no user");
       }
     })
 
@@ -26,27 +30,32 @@ function Login() {
   })
 
   const handleSubmit = async () =>{
-    // Alert.alert(
-    //   "Alert Title",
-    //   "My Alert Msg",
-    //   [
-    //     {
-    //       text: "Cancel",
-    //       onPress: () => console.log("Cancel Pressed"),
-    //       style: "cancel"
-    //     },
-    //     { text: "OK", onPress: () => console.log("OK Pressed") }
-    //   ]
-    // );
+
       if(email.length>5 && password.length>5){
         await signInWithEmailAndPassword(auth, email, password)
         .then((res)=>{
           console.log(res);
+          showMessage({
+            message:'Log In Suceessfully!',
+            type:'success',
+            icon:'auto'
+          })
         })
         .catch((err)=>{
           console.log(err);
+          showMessage({
+            message:err.message,
+            type:'danger',
+            icon:'danger'
+          })
         })
-      }    
+      }else{
+        showMessage({
+          message:'Enter Email/Password Correctly!',
+          type:'warning',
+          icon:'warning'
+        })
+      }   
   }
 
 
@@ -90,10 +99,18 @@ function Login() {
 
               <TouchableOpacity
                 style={styles.button}
+                onPress={() => navigation.navigate("SignUp")}
+              >
+                <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.button}
                 onPress={() => navigation.navigate("ForgotPassword")}
               >
-                <Text style={styles.buttonText}>Forgot Password?</Text>
+                <Text style={styles.buttonText}>FORGOT PASSWORD?</Text>
               </TouchableOpacity>
+              
             </View>
           </View>
         </View>

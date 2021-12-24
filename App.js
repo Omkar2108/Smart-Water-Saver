@@ -9,12 +9,13 @@ import SignUp from './screens/Signup';
 import ForgotPassword from './screens/ForgotPassword';
 import Welcome from './screens/Welcome';
 import { ScreenStackHeaderLeftView } from 'react-native-screens';
-
+import FlashMessage from "react-native-flash-message";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer >
+      <FlashMessage position="top"/>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} 
         options={({ navigation }) =>({

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import { showMessage } from "react-native-flash-message";
 
 
 function SignUp() {
@@ -15,6 +16,11 @@ function SignUp() {
       await onAuthStateChanged(auth, (user)=>{
         if(user){
           navigation.navigate("Welcome");
+          showMessage({
+            message:'Already Logged In !',
+            type:'success',
+            icon:'success'
+          })
         }
       })
     })
@@ -24,11 +30,28 @@ function SignUp() {
           
           await createUserWithEmailAndPassword(auth, email, password)
           .then((res)=>{
-            console.log(res);
+            // console.log(res);
+            showMessage({
+              message:'Account Created Successfully !',
+              type:'success',
+              icon:'success'
+            })
+            navigation.navigate("Welcome");
           }).catch((err)=>{
-            console.log(err);
+            // console.log(err);
+            showMessage({
+              message:err.message,
+              type:'danger',
+              icon:'danger'
+            })
           });
-        }  
+        } else{
+          showMessage({
+            message: 'Enter correct Email/Password!',
+            type:'warning',
+            icon:'warning'
+          })
+        }
     }
 
     return (
@@ -69,6 +92,13 @@ function SignUp() {
                   <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
                 </TouchableOpacity>
   
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => navigation.navigate("Login")}
+                >
+                  <Text style={styles.buttonText}>L O G I N</Text>
+                </TouchableOpacity>
+
                 {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <View
                     style={{ flex: 1, height: 1, backgroundColor: "black" }}
@@ -139,7 +169,8 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       height: 160,
       backgroundColor: "#1f7882",
-      borderRadius: 10
+      borderTopRightRadius:18,
+      borderTopLeftRadius:18
     },
     // backgrad: {
     //   shadowColor: "#000",

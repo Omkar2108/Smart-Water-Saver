@@ -1,33 +1,45 @@
 import { useNavigation } from "@react-navigation/native";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Image
-} from "react-native";
+import { TouchableOpacity, StyleSheet, Text, View, TextInput, Image, Button} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
+import { showMessage } from "react-native-flash-message";
 
 
-function ForgotPassword() {
+function ForgotPassword({ navigation }) {
   const [email, setEmail] = useState('');
-  const navigation = useNavigation();
 
   const handleSubmit = async () =>{
       if(email.length > 5){
         const auth = getAuth();
         await sendPasswordResetEmail(auth, email)
         .then((res)=>{
-            console.log(res);
+            // console.log(res);
+            if(res===undefined){
+              showMessage({
+                message: "Link Send to Email !",
+                type:'success',
+                icon:'success'
+              });
+              navigation.navigate("Login");
+            }
         })
         .catch((err)=>{
-            console.log(err);
+            // console.log(err.message);
+            showMessage({
+              message:err.message,
+              type:'danger',
+              icon:'danger'
+            })
         })
-      }    
+      }else{
+        showMessage({
+          message: "Enter correct Email !",
+          type: 'warning',
+          icon: 'warning'
+        });
+      }   
   }
 
 
@@ -59,7 +71,7 @@ function ForgotPassword() {
                 style={styles.button}
                 onPress={() => handleSubmit()}
               >
-                <Text style={styles.buttonText}>Reset Password</Text>
+                <Text style={styles.buttonText}>RESET PASSWORD</Text>
               </TouchableOpacity>
             </View>
           </View>

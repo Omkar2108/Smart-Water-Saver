@@ -9,7 +9,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-
+import { showMessage } from "react-native-flash-message";
 
 function Welcome() {
   const [limit, setLimit] = useState('');
@@ -25,7 +25,12 @@ function Welcome() {
         if(user){
             console.log(user);
         }else{
-            navigation.navigate("Login");
+            showMessage({
+                message:'Please Login!',
+                type:'warning',
+                icon:'warning'
+              })
+              navigation.navigate("Login");
         }
     })
   })

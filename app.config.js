@@ -3,6 +3,9 @@ import 'dotenv/config';
 export default {
     name: 'water-saver',
     version: '1.0.0',
+    android:{
+      package:"com.project.smartwatersaver",
+    },
     extra: {
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,
