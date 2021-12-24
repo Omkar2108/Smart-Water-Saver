@@ -1,18 +1,27 @@
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Firebase from '../firebase';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import Constant from 'expo-constants';
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
+
 
 function SignUp() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+  const auth = getAuth();
+    useEffect(async ()=>{
+      await onAuthStateChanged(auth, (user)=>{
+        if(user){
+          navigation.navigate("Welcome");
+        }
+      })
+    })
 
     const handleSubmit = async () =>{
         if(email.length> 6 && password.length>6){
-          const auth = getAuth();
+          
           await createUserWithEmailAndPassword(auth, email, password)
           .then((res)=>{
             console.log(res);
@@ -60,7 +69,7 @@ function SignUp() {
                   <Text style={styles.buttonText}>CREATE ACCOUNT</Text>
                 </TouchableOpacity>
   
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <View
                     style={{ flex: 1, height: 1, backgroundColor: "black" }}
                   />
@@ -77,10 +86,10 @@ function SignUp() {
                   <View
                     style={{ flex: 1, height: 1, backgroundColor: "black" }}
                   />
-                </View>
-                <Text style={styles.font}>Sign Up With</Text>
+                </View> */}
+                {/* <Text style={styles.font}>Sign Up With</Text> */}
   
-                <View style={styles.auth}>
+                {/* <View style={styles.auth}>
                   <TouchableOpacity
                     style={styles.authBtnBox}
                     onPress={() => navigation.navigate("Login")}
@@ -107,7 +116,7 @@ function SignUp() {
                       Facebook
                     </Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
               </View>
             </View>
           </View>

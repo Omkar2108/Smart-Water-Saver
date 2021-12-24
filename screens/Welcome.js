@@ -5,7 +5,6 @@ import {
   Text,
   View,
   TextInput,
-  Image
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";

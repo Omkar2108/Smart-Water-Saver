@@ -1,13 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Image,
-  Modal
-} from "react-native";
+import {  TouchableOpacity, StyleSheet, Text, View, TextInput, Image, Modal, Alert} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useEffect } from "react";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
@@ -18,7 +10,6 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const [error,setError] = useState(true);
-  const [signIn, setSignIn] = useState(false);
   const auth = getAuth(Firebase);
 
   useEffect(async()=>{
@@ -35,6 +26,18 @@ function Login() {
   })
 
   const handleSubmit = async () =>{
+    // Alert.alert(
+    //   "Alert Title",
+    //   "My Alert Msg",
+    //   [
+    //     {
+    //       text: "Cancel",
+    //       onPress: () => console.log("Cancel Pressed"),
+    //       style: "cancel"
+    //     },
+    //     { text: "OK", onPress: () => console.log("OK Pressed") }
+    //   ]
+    // );
       if(email.length>5 && password.length>5){
         await signInWithEmailAndPassword(auth, email, password)
         .then((res)=>{
