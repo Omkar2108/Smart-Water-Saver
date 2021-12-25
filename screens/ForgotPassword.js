@@ -1,47 +1,45 @@
-import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity, StyleSheet, Text, View, TextInput, Image, Button} from "react-native";
+import { TouchableOpacity, StyleSheet, Text, View, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-
+import { TextInput } from "react-native-paper";
 import { showMessage } from "react-native-flash-message";
-
+import tw from "twrnc";
 
 function ForgotPassword({ navigation }) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = async () =>{
-      if(email.length > 5){
-        const auth = getAuth();
-        await sendPasswordResetEmail(auth, email)
-        .then((res)=>{
-            // console.log(res);
-            if(res===undefined){
-              showMessage({
-                message: "Link Send to Email !",
-                type:'success',
-                icon:'success'
-              });
-              navigation.navigate("Login");
-            }
-        })
-        .catch((err)=>{
-            // console.log(err.message);
+  const handleSubmit = async () => {
+    if (email.length > 5) {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email)
+        .then((res) => {
+          // console.log(res);
+          if (res === undefined) {
             showMessage({
-              message:err.message,
-              type:'danger',
-              icon:'danger'
-            })
+              message: "Link Send to Email !",
+              type: "success",
+              icon: "success",
+            });
+            navigation.navigate("Login");
+          }
         })
-      }else{
-        showMessage({
-          message: "Enter correct Email !",
-          type: 'warning',
-          icon: 'warning'
+        .catch((err) => {
+          // console.log(err.message);
+          showMessage({
+            message: err.message,
+            type: "danger",
+            icon: "danger",
+          });
         });
-      }   
-  }
-
+    } else {
+      showMessage({
+        message: "Enter correct Email !",
+        type: "warning",
+        icon: "warning",
+      });
+    }
+  };
 
   return (
     <KeyboardAwareScrollView style={{ flex: 1 }}>
@@ -51,29 +49,28 @@ function ForgotPassword({ navigation }) {
           <View style={styles.grad}>
             <View style={styles.imageBox}>
               <Image
-                style={styles.images}
+                style={tw`w-30 h-30 self-center`}
                 source={require("../assets/login-1.png")}
               />
             </View>
-            <Text style={styles.Headerfont}>Forgot Password</Text>
+            <Text style={tw`font-semibold text-3xl text-white text-center `}>
+              Forgot Password
+            </Text>
           </View>
-          <View style={styles.flexing}>
-            <Text style={styles.font}>Please Enter Email</Text>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="black"
-                onChangeText={(text)=> setEmail(text)}
-                // textContentType="email"
-              />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => handleSubmit()}
-              >
-                <Text style={styles.buttonText}>RESET PASSWORD</Text>
-              </TouchableOpacity>
-            </View>
+          <View>
+            <TextInput
+              style={tw`mt-5 mb-5`}
+              label="Email"
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+              // textContentType="email"
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleSubmit()}
+            >
+              <Text style={tw`font-semibold text-lg text-white text-center pt-1 `}>Send Link to Email</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -86,7 +83,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 6
+      height: 6,
     },
     shadowOpacity: 0.26,
     shadowRadius: 8,
@@ -95,70 +92,35 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 180,
     backgroundColor: "#1f7882",
-    borderTopRightRadius:18,
-    borderTopLeftRadius:18
-  },
-  input: {
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.29,
-    shadowRadius: 9,
-    height: 40,
-    marginBottom: 15,
-    marginLeft: 16,
-    marginRight: 16,
-    borderWidth: 1,
-    paddingLeft: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
-    borderRadius: 10,
-    color: "black"
-  },
-
-  images: {
-    marginTop: 20,
-    height: 70,
-    width: 70,
-    alignSelf: "center"
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
   },
   box: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 6
+      height: 6,
     },
     shadowOpacity: 0.56,
     shadowRadius: 13,
-    height: 500,
+    height: 370,
     textAlign: "center",
     marginTop: 100,
     marginLeft: 40,
     marginRight: 40,
     borderRadius: 20,
     backgroundColor: "#F9F7F7",
-    borderColor:'#1f7882',
-    borderWidth:1.5
+    borderColor: "#1f7882",
+    borderWidth: 1.5,
   },
   flexing: {
-    height: 320,
-    justifyContent: "space-evenly"
+    height: 200,
+    justifyContent: "space-evenly",
   },
   container: {
     backgroundColor: "#F9F7F7",
     height: "100%",
-    width: "100%"
-  },
-  Headerfont: {
-    marginBottom: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    alignSelf: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.6)",
-    textShadowOffset: { width: 0, height: 3 },
-    textShadowRadius: 6,
-    elevation: 25,
-    fontSize: 30,
-    color: "#ffffff"
+    width: "100%",
   },
   font: {
     alignSelf: "center",
@@ -168,7 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#1f7882",
     marginLeft: 15,
-    marginRight: 15
+    marginRight: 15,
   },
   button: {
     shadowColor: "#000000",
@@ -183,15 +145,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#1f7882",
     borderColor: "#7fffd4",
     // padding: 12,
-    borderRadius: 16
+    borderRadius: 16,
   },
   buttonText: {
     color: "#ffff",
     fontSize: 15,
     marginTop: 7,
-    alignSelf:'center',
-    paddingTop:5
-  }
+    alignSelf: "center",
+    paddingTop: 5,
+  },
 });
 
 export default ForgotPassword;

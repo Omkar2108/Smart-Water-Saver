@@ -7,11 +7,12 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Modal
+  Modal,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { showMessage } from "react-native-flash-message";
+import { Avatar, Appbar } from "react-native-paper";
 
 const Welcome = ({ navigation }) => {
   const [limit, setLimit] = useState(0);
@@ -19,50 +20,53 @@ const Welcome = ({ navigation }) => {
   const [signIn, setSignIn] = useState(false);
   const auth = getAuth();
 
-  useEffect(async ()=>{
-      await onAuthStateChanged(auth, (user)=>{
-          if(user){
-              // console.log(user);
-          }else{
-              showMessage({
-                  message:'Please Login!',
-                  type:'warning',
-                  icon:'warning'
-                })
-                navigation.navigate("Login");
-          }
-      })
-    })
+  useEffect(async () => {
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // console.log(user);
+      } else {
+        showMessage({
+          message: "Please Login!",
+          type: "warning",
+          icon: "warning",
+        });
+        navigation.navigate("Login");
+      }
+    });
+  });
 
-    const handleSignOut = async () =>{
-      
-      await signOut(auth)
-      .then((res)=>{
-          // console.log(res);
-          showMessage({
-            message:'Signed Out Sucessfully!',
-            type:'success',
-            icon:'success'
-          })
+  const handleSignOut = async () => {
+    await signOut(auth)
+      .then((res) => {
+        // console.log(res);
+        showMessage({
+          message: "Signed Out Sucessfully!",
+          type: "success",
+          icon: "success",
+        });
       })
-      .catch((err)=>{
-          // console.log(err);
-          showMessage({
-            message:err.message,
-            type:'danger',
-            icon:'danger'
-          })
-      })
-    }
+      .catch((err) => {
+        // console.log(err);
+        showMessage({
+          message: err.message,
+          type: "danger",
+          icon: "danger",
+        });
+      });
+  };
 
   return (
-    <KeyboardAwareScrollView style={{ flex: 1, backgroundColor:"#CBFBE9"}}>
-      <View style={styles.showHeader}>
-        <Image style={styles.images} source={require("../assets/user.png")} />
-        <Text style={styles.showHeaderfont}>{auth && auth.currentUser.email}</Text>
-        <TouchableOpacity style={styles.logOut} onPress={()=>handleSignOut()}>
-          <Text style={styles.showHeaderfont}>LogOut</Text>
-        </TouchableOpacity>
+    <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: "#CBFBE9" }}>
+      <View>
+        <Appbar.Header style={{ position: "relative" }}>
+          <Appbar.Content title="Smart Water Saver" />
+          <TouchableOpacity onPress={() => handleSignOut()}>
+            <Avatar.Text
+              size={50}
+              label={auth && auth.currentUser.email[0].toUpperCase()}
+            />
+          </TouchableOpacity>
+        </Appbar.Header>
       </View>
       <View style={styles.box}>
         <View style={styles.grad}>
@@ -85,30 +89,30 @@ const Welcome = ({ navigation }) => {
       </View>
 
       <View style={styles.box}>
-          <Text style={styles.showStatusText}>Water flow rate :</Text>
-          <View style={styles.underline} />
+        <Text style={styles.showStatusText}>Water flow rate :</Text>
+        <View style={styles.underline} />
 
-        <View  style={styles.displayValues}>
-            <Text style={styles.valueText}>50 ml/liter</Text>
+        <View style={styles.displayValues}>
+          <Text style={styles.valueText}>50 ml/liter</Text>
         </View>
         <View style={styles.borderStyle} />
         <Text style={styles.showStatusText}>Water Turbidity :</Text>
-          <View style={styles.underline} />
+        <View style={styles.underline} />
 
-        <View  style={styles.displayValues}>
-            <Text style={styles.valueText}>3 NTU</Text>
+        <View style={styles.displayValues}>
+          <Text style={styles.valueText}>3 NTU</Text>
         </View>
         <View style={styles.borderStyle} />
-          <Text style={styles.showStatusText}>Current Water Limit :</Text>
-          <View style={styles.underline} />
+        <Text style={styles.showStatusText}>Current Water Limit :</Text>
+        <View style={styles.underline} />
 
-        <View  style={styles.displayValues}>
-            <Text style={styles.valueText}>20 LITERS</Text>
+        <View style={styles.displayValues}>
+          <Text style={styles.valueText}>20 LITERS</Text>
         </View>
       </View>
     </KeyboardAwareScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   showHeader: {
@@ -118,10 +122,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 3
+      height: 3,
     },
     shadowOpacity: 0.56,
-    shadowRadius: 10
+    shadowRadius: 10,
   },
   logOut: {
     marginTop: 16.5,
@@ -141,21 +145,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "black",
     borderColor: "#2f4f4f",
-    borderWidth: 1
+    borderWidth: 1,
   },
 
   images: {
     height: 40,
     width: 40,
     alignSelf: "center",
-    marginLeft: 15
+    marginLeft: 15,
   },
   box: {
     backgroundColor: "#f5f5f5",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 6
+      height: 6,
     },
     shadowOpacity: 0.56,
     shadowRadius: 13,
@@ -165,7 +169,6 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginRight: 40,
     borderRadius: 20,
-
   },
   showHeaderfont: {
     marginLeft: 40,
@@ -175,25 +178,25 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 3 },
     textShadowRadius: 6,
     fontSize: 20,
-    color: "black"
+    color: "black",
   },
   showStatusText: {
-    marginTop:20,
+    marginTop: 20,
     marginBottom: 10,
     marginLeft: 20,
     marginRight: 20,
     fontSize: 20,
-    color: "black"
+    color: "black",
   },
   showFieldTitle: {
-    marginTop:15,
+    marginTop: 15,
     marginBottom: 20,
     marginLeft: 20,
     marginRight: 20,
     fontSize: 20,
-    color: "black"
+    color: "black",
   },
- 
+
   button: {
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 3 },
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#757575",
     borderColor: "#7fffd4",
     // padding: 12,
-    borderRadius: 16
+    borderRadius: 16,
   },
   displayValues: {
     marginLeft: 45,
@@ -216,41 +219,36 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "#7fffd4",
     // padding: 12,
-    borderRadius: 16
+    borderRadius: 16,
   },
   buttonText: {
     color: "black",
     fontSize: 15,
     marginTop: 5,
     alignSelf: "center",
-    paddingTop: 5
+    paddingTop: 5,
   },
   valueText: {
     color: "black",
     fontSize: 20,
     marginTop: 7,
     alignSelf: "center",
-    paddingTop: 5
+    paddingTop: 5,
   },
   borderStyle: {
-    borderBottomColor: 'rgba(0, 0, 0, 0.3)', 
+    borderBottomColor: "rgba(0, 0, 0, 0.3)",
     borderBottomWidth: 4,
     marginTop: 2,
-    marginBottom:2
+    marginBottom: 2,
   },
   underline: {
-    borderBottomColor: 'rgba(0, 0, 0, 0.3)', 
+    borderBottomColor: "rgba(0, 0, 0, 0.3)",
     borderBottomWidth: 1,
     marginTop: 3,
-    marginLeft:20,
-    marginRight:20,
-    marginBottom:3
-  }
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 3,
+  },
 });
 
 export default Welcome;
-
-
-
-
-
