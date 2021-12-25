@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Modal,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { showMessage } from "react-native-flash-message";
 import { Avatar, Appbar } from "react-native-paper";
+import { TextInput } from "react-native-paper";
+import tw from "twrnc";
 
 const Welcome = ({ navigation }) => {
   const [limit, setLimit] = useState(0);
-  const [error, setError] = useState(true);
-  const [signIn, setSignIn] = useState(false);
   const auth = getAuth();
 
   useEffect(async () => {
@@ -60,7 +51,7 @@ const Welcome = ({ navigation }) => {
       <View>
         <Appbar.Header style={{ position: "relative" }}>
           <Appbar.Content title="Smart Water Saver" />
-          <TouchableOpacity onPress={() => handleSignOut()}>
+          <TouchableOpacity onPress={() => console.logs()}>
             <Avatar.Text
               size={50}
               label={auth && auth.currentUser.email[0].toUpperCase()}
@@ -69,21 +60,16 @@ const Welcome = ({ navigation }) => {
         </Appbar.Header>
       </View>
       <View style={styles.box}>
-        <View style={styles.grad}>
-          <Text style={styles.showFieldTitle}>Edit Water Limit</Text>
-        </View>
         <View>
           <TextInput
-            style={styles.input}
-            placeholder=""
-            placeholderTextColor="black"
+            label="Water Limit"
+            style={tw`mb-5`}
             onChangeText={(text) => setLimit(text)}
-            // textContentType="email"
             keyboardType="numeric"
           />
 
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>S E T</Text>
+            <Text style={tw`text-white font-semibold text-center text-lg pt-1`}>S E T</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -129,30 +115,6 @@ const styles = StyleSheet.create({
   },
   logOut: {
     marginTop: 16.5,
-  },
-  input: {
-    shadowColor: "#000000",
-    backgroundColor: "#dcdcdc",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.29,
-    shadowRadius: 9,
-    height: 40,
-    marginBottom: 20,
-    marginLeft: 16,
-    marginRight: 16,
-    paddingLeft: 10,
-    paddingBottom: 5,
-    borderRadius: 10,
-    color: "black",
-    borderColor: "#2f4f4f",
-    borderWidth: 1,
-  },
-
-  images: {
-    height: 40,
-    width: 40,
-    alignSelf: "center",
-    marginLeft: 15,
   },
   box: {
     backgroundColor: "#f5f5f5",

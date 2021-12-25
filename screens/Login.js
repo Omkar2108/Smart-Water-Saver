@@ -72,12 +72,10 @@ function Login() {
         <View style={styles.box}>
           <View style={styles.grad}>
             <View style={styles.imageBox}>
-              <TouchableOpacity onPress={() => console.log("done")}>
                 <Image
                    style={tw`w-28 h-28 self-center`}
                   source={require("../assets/login-1.png")}
                 />
-              </TouchableOpacity>
             </View>
             <Text style={tw`font-semibold text-3xl text-white text-center `}>
               Welcome Back
