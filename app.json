@@ -18,13 +18,14 @@
       "supportsTablet": true
     },
     "android": {
+      "enableDangerousExperimentalLeanBuilds": true,
       "package": "com.project.smartwatersaver",
       "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
       }
     },
-    "web": {
-    }
+    "web": {},
+    "description": ""
   }
 }

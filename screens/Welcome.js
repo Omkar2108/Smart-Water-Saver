@@ -9,12 +9,16 @@ import tw from "twrnc";
 
 const Welcome = ({ navigation }) => {
   const [limit, setLimit] = useState(0);
+  const [currLimit, setCurrLimit] = useState(0);
+  const [flow, setflow] = useState(0);
+  const [user, setUser] = useState(null); 
   const auth = getAuth();
 
   useEffect(async () => {
     await onAuthStateChanged(auth, (user) => {
       if (user) {
-        // console.log(user);
+        setUser(user);
+        // console.log("user");
       } else {
         showMessage({
           message: "Please Login!",
@@ -24,7 +28,63 @@ const Welcome = ({ navigation }) => {
         navigation.navigate("Login");
       }
     });
-  });
+
+    await fetch(`https://api.thingspeak.com/channels/1639047/fields/1.json?api_key=6ZPC6OKP5E9ZKT38&results=10`)
+    .then((res)=>{
+      return res.json();
+    }).then((data)=>{
+      // console.log(data["feeds"][0]["field2"])
+      for(let obj of data["feeds"]){
+        if(obj["field1"]){
+          setCurrLimit(obj["field1"]);
+        }
+      }
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    
+    await fetch(`https://api.thingspeak.com/channels/1639047/fields/2.json?api_key=6ZPC6OKP5E9ZKT38&results=10`)
+    .then((res)=>{
+      return res.json();
+    }).then((data)=>{
+      // console.log(data["feeds"]);
+      for(let obj of data["feeds"]){
+        if(obj["field2"]){
+          setflow(obj["field2"]);
+        }
+      }
+    })
+    .catch((err)=>{
+      console.log("err", err);
+    })
+  }, [limit]);
+
+  const handleSet =async () =>{
+    if(parseInt(limit)>0){
+      await fetch(`https://api.thingspeak.com/update?api_key=LGO4G9ZJB3C4BVRE&field1=${limit}`)
+      .then((res)=>{
+        // console.log(res);
+        return res.json();        
+      }).then((data)=>{
+        // console.log(data);
+        showMessage({
+          message: `Limit Set to ${limit}`,
+          type: 'success',
+          icon: 'success'
+        })
+      })
+      .catch((err)=>{
+        // console.log(err);
+        showMessage({
+          message: 'Failed to set Limit',
+          type: 'danger',
+          icon: 'danger'
+        })
+      })
+      setLimit(0);
+    }
+  }
 
   const handleSignOut = async () => {
     await signOut(auth)
@@ -51,10 +111,11 @@ const Welcome = ({ navigation }) => {
       <View>
         <Appbar.Header style={{ position: "relative" }}>
           <Appbar.Content title="Smart Water Saver" />
-          <TouchableOpacity onPress={() => console.logs()}>
+          <TouchableOpacity onPress={()=>handleSignOut()}>
             <Avatar.Text
               size={50}
               label={auth && auth.currentUser.email[0].toUpperCase()}
+              style={tw`bg-red-500`}
             />
           </TouchableOpacity>
         </Appbar.Header>
@@ -62,13 +123,13 @@ const Welcome = ({ navigation }) => {
       <View style={styles.box}>
         <View>
           <TextInput
-            label="Water Limit"
+            label="Water Limit in L"
             style={tw`mb-5`}
             onChangeText={(text) => setLimit(text)}
             keyboardType="numeric"
           />
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={()=>handleSet()}>
             <Text style={tw`text-white font-semibold text-center text-lg pt-1`}>S E T</Text>
           </TouchableOpacity>
         </View>
@@ -79,21 +140,14 @@ const Welcome = ({ navigation }) => {
         <View style={styles.underline} />
 
         <View style={styles.displayValues}>
-          <Text style={styles.valueText}>50 ml/liter</Text>
-        </View>
-        <View style={styles.borderStyle} />
-        <Text style={styles.showStatusText}>Water Turbidity :</Text>
-        <View style={styles.underline} />
-
-        <View style={styles.displayValues}>
-          <Text style={styles.valueText}>3 NTU</Text>
+          <Text style={styles.valueText}>{flow} ml/second</Text>
         </View>
         <View style={styles.borderStyle} />
         <Text style={styles.showStatusText}>Current Water Limit :</Text>
         <View style={styles.underline} />
 
         <View style={styles.displayValues}>
-          <Text style={styles.valueText}>20 LITERS</Text>
+          <Text style={styles.valueText}>{currLimit} Litre</Text>
         </View>
       </View>
     </KeyboardAwareScrollView>
