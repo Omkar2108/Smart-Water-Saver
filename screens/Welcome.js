@@ -6,16 +6,20 @@ import { showMessage } from "react-native-flash-message";
 import { Avatar, Appbar } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import tw from "twrnc";
+import * as Progress from 'react-native-progress';
 
 const Welcome = ({ navigation }) => {
   const [limit, setLimit] = useState(0);
   const [currLimit, setCurrLimit] = useState(0);
   const [flow, setflow] = useState(0);
   const [user, setUser] = useState(null); 
+  const [progress, setProgress] = useState(0); 
+  const [time, setTime ] = useState(0);
   const auth = getAuth();
 
   useEffect(async () => {
     await onAuthStateChanged(auth, (user) => {
+
       if (user) {
         setUser(user);
         // console.log("user");
@@ -29,31 +33,22 @@ const Welcome = ({ navigation }) => {
       }
     });
 
-    await fetch(`https://api.thingspeak.com/channels/1639047/fields/1.json?api_key=6ZPC6OKP5E9ZKT38&results=10`)
+    await fetch(`https://api.thingspeak.com/channels/1639047/fields/1/last?api_key=6ZPC6OKP5E9ZKT38`)
     .then((res)=>{
       return res.json();
     }).then((data)=>{
-      // console.log(data["feeds"][0]["field2"])
-      for(let obj of data["feeds"]){
-        if(obj["field1"]){
-          setCurrLimit(obj["field1"]);
-        }
-      }
+      setCurrLimit(data);
+      // console.log(data);
     })
     .catch((err)=>{
       console.log(err);
     })
     
-    await fetch(`https://api.thingspeak.com/channels/1639047/fields/2.json?api_key=6ZPC6OKP5E9ZKT38&results=10`)
+    await fetch(`https://api.thingspeak.com/channels/1639047/fields/2/last?api_key=6ZPC6OKP5E9ZKT38`)
     .then((res)=>{
       return res.json();
     }).then((data)=>{
-      // console.log(data["feeds"]);
-      for(let obj of data["feeds"]){
-        if(obj["field2"]){
-          setflow(obj["field2"]);
-        }
-      }
+      setflow(data);
     })
     .catch((err)=>{
       console.log("err", err);
@@ -62,6 +57,13 @@ const Welcome = ({ navigation }) => {
 
   const handleSet =async () =>{
     if(parseInt(limit)>0){
+      const total = parseInt(limit*1000)/parseInt(flow);
+      var time=0;
+      const update=setInterval(()=>{
+        time += 5;
+        console.log(time/total);
+        setProgress(time/total);
+      }, 5000);
       await fetch(`https://api.thingspeak.com/update?api_key=LGO4G9ZJB3C4BVRE&field1=${limit}`)
       .then((res)=>{
         // console.log(res);
@@ -107,164 +109,42 @@ const Welcome = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: "#CBFBE9" }}>
+    <KeyboardAwareScrollView style={tw`bg-blue-200`}>
       <View>
-        <Appbar.Header style={{ position: "relative" }}>
-          <Appbar.Content title="Smart Water Saver" />
+        <Appbar.Header style={tw`bg-blue-400 relative`}>
+          <Appbar.Content title="Smart Water Saver"/>
           <TouchableOpacity onPress={()=>handleSignOut()}>
             <Avatar.Text
               size={50}
               label={auth && auth.currentUser.email[0].toUpperCase()}
-              style={tw`bg-red-500`}
+              style={tw`bg-red-300`}
             />
           </TouchableOpacity>
         </Appbar.Header>
       </View>
-      <View style={styles.box}>
-        <View>
+      <Progress.Circle style={tw`flex mt-10 self-center`} size={150} progress={progress} showsText={true} />
+      <View style={tw`m-5`}>
           <TextInput
-            label="Water Limit in L"
-            style={tw`mb-5`}
+            label="Water Limit in litre"
+            mode="outlined"
+            style={tw`mb-5 mx-10 rounded-lg	text-lg`}
             onChangeText={(text) => setLimit(text)}
             keyboardType="numeric"
           />
 
-          <TouchableOpacity style={styles.button} onPress={()=>handleSet()}>
+          <TouchableOpacity style={tw`h-auto p-2 bg-blue-300 rounded-lg mx-8`} onPress={()=>handleSet()}>
             <Text style={tw`text-white font-semibold text-center text-lg pt-1`}>S E T</Text>
           </TouchableOpacity>
-        </View>
       </View>
 
-      <View style={styles.box}>
-        <Text style={styles.showStatusText}>Water flow rate :</Text>
-        <View style={styles.underline} />
-
-        <View style={styles.displayValues}>
-          <Text style={styles.valueText}>{flow} ml/second</Text>
-        </View>
-        <View style={styles.borderStyle} />
-        <Text style={styles.showStatusText}>Current Water Limit :</Text>
-        <View style={styles.underline} />
-
-        <View style={styles.displayValues}>
-          <Text style={styles.valueText}>{currLimit} Litre</Text>
-        </View>
+      <View style={tw`mx-20 h-50 justify-center items-center border border-white bg-blue-100 rounded-2xl shadow-2xl`}>
+        <Text style={tw`text-black m-2 text-xl `}>Water flow rate :</Text>
+        <Text style={tw`text-black text-xl`}>{flow} ml/second</Text>
+        <Text style={tw`text-black m-2 text-xl `}>Current Water Limit :</Text>
+        <Text style={tw`text-black text-xl`}>{currLimit} Litre</Text>
       </View>
     </KeyboardAwareScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  showHeader: {
-    flexDirection: "row",
-    height: 66,
-    backgroundColor: "#1f7882",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.56,
-    shadowRadius: 10,
-  },
-  logOut: {
-    marginTop: 16.5,
-  },
-  box: {
-    backgroundColor: "#f5f5f5",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.56,
-    shadowRadius: 13,
-    height: "auto",
-    textAlign: "center",
-    marginTop: 40,
-    marginLeft: 40,
-    marginRight: 40,
-    borderRadius: 20,
-  },
-  showHeaderfont: {
-    marginLeft: 40,
-    marginBottom: 5,
-    alignSelf: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.6)",
-    textShadowOffset: { width: 0, height: 3 },
-    textShadowRadius: 6,
-    fontSize: 20,
-    color: "black",
-  },
-  showStatusText: {
-    marginTop: 20,
-    marginBottom: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    fontSize: 20,
-    color: "black",
-  },
-  showFieldTitle: {
-    marginTop: 15,
-    marginBottom: 20,
-    marginLeft: 20,
-    marginRight: 20,
-    fontSize: 20,
-    color: "black",
-  },
-
-  button: {
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.29,
-    shadowRadius: 9,
-    marginLeft: 45,
-    marginRight: 45,
-    marginBottom: 20,
-    elevation: 25,
-    height: 40,
-    backgroundColor: "#757575",
-    borderColor: "#7fffd4",
-    // padding: 12,
-    borderRadius: 16,
-  },
-  displayValues: {
-    marginLeft: 45,
-    marginRight: 45,
-    marginBottom: 20,
-    height: 40,
-    borderColor: "#7fffd4",
-    // padding: 12,
-    borderRadius: 16,
-  },
-  buttonText: {
-    color: "black",
-    fontSize: 15,
-    marginTop: 5,
-    alignSelf: "center",
-    paddingTop: 5,
-  },
-  valueText: {
-    color: "black",
-    fontSize: 20,
-    marginTop: 7,
-    alignSelf: "center",
-    paddingTop: 5,
-  },
-  borderStyle: {
-    borderBottomColor: "rgba(0, 0, 0, 0.3)",
-    borderBottomWidth: 4,
-    marginTop: 2,
-    marginBottom: 2,
-  },
-  underline: {
-    borderBottomColor: "rgba(0, 0, 0, 0.3)",
-    borderBottomWidth: 1,
-    marginTop: 3,
-    marginLeft: 20,
-    marginRight: 20,
-    marginBottom: 3,
-  },
-});
 
 export default Welcome;

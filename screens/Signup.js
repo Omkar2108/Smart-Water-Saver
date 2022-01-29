@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
@@ -17,6 +17,7 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
   const [visible, setVisible] = useState(true);
+  const [visible1, setVisible1] = useState(true);
   const auth = getAuth();
   useEffect(async () => {
     await onAuthStateChanged(auth, (user) => {
@@ -76,73 +77,87 @@ function SignUp() {
   };
 
   return (
-    <KeyboardAwareScrollView>
-      <View style={styles.container}>
-        <View style={styles.box}>
-          <View style={styles.grad}>
-            <View style={styles.imageBox}>
+    <KeyboardAwareScrollView style={tw``}>
+      <View style={tw`w-full h-auto `}>
+        <View style={tw``}>
+          <View style={tw`mt-20`}>
               <Image
                 style={tw`w-25 h-25 self-center`}
                 source={require("../assets/signup.png")}
               />
-            </View>
-            <Text style={tw`font-semibold text-3xl text-white text-center `}>
+            <Text style={tw`font-semibold text-3xl text-blue-400 text-center `}>
               Welcome
             </Text>
           </View>
           <View>
             <TextInput
-              style={tw`mt-5 `}
+              style={tw`mt-5 mx-10 text-lg`}
+              left={<TextInput.Icon name="email-outline"/>}
               label="Email"
+              mode="outlined"
               onChangeText={(text) => setEmail(text)}
               value={email}
               // textContentType="email"
             />
 
             <TextInput
+            style={tw`mx-10 my-3 text-lg`}
               label="Password"
+              mode="outlined"
               secureTextEntry={visible}
-              right={
+              left={<TextInput.Icon name="lock-outline"/>}
+              right={visible?
                 <TextInput.Icon
                   name="eye"
-                  onPress={() => setVisible(!visible)}
+                  onPress={() => setVisible(false)}
+                />:
+                <TextInput.Icon
+                  name="eye-off"
+                  onPress={() => setVisible(true)}
                 />
               }
               onChangeText={(text) => setPassword(text)}
               value={password}
             />
             <TextInput
-              style={tw`mb-5`}
+              style={tw`mb-5 mx-10 text-lg`}
+              mode="outlined"
               label="Confirm Password"
-              secureTextEntry={visible}
-              right={
+              secureTextEntry={visible1}
+              right={visible1?
                 <TextInput.Icon
                   name="eye"
-                  onPress={() => setVisible(!visible)}
+                  onPress={() => setVisible1(false)}
+                />:
+                <TextInput.Icon
+                  name="eye-off"
+                  onPress={() => setVisible1(true)}
                 />
               }
+              left={<TextInput.Icon name="lock-outline"/>}
               onChangeText={(text) => setConfirmPassword(text)}
               value={confirmPassword}
             />
 
             <TouchableOpacity
-              style={styles.button}
+              style={tw`h-auto p-2 bg-blue-400 mx-8 rounded-lg`}
               onPress={() => handleSubmit()}
             >
-              <Text style={tw`text-white text-lg text-center pt-1 font-normal`}>
+              <Text style={tw`text-white text-xl text-center  `}>
                 Create Account
               </Text>
             </TouchableOpacity>
 
-            <Text style={tw`text-center text-lg font-semibold`}>
+            <Text style={tw`text-center text-lg font-semibold mt-20`}>
               {" "}
-              Already have Account
-            </Text>
+              Already have Account!
+
             <Text
-              style={tw`text-center text-lg font-bold text-blue-500`}
+              style={tw`text-center text-lg font-bold text-blue-500 `}
               onPress={() => navigation.navigate("Login")}
             >
-              Login
+              {" "}Login
+            </Text>
             </Text>
           </View>
         </View>
@@ -150,89 +165,5 @@ function SignUp() {
     </KeyboardAwareScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  grad: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.26,
-    shadowRadius: 8,
-    paddingTop: 10,
-    paddingBottom: 10,
-    justifyContent: "space-between",
-    height: 160,
-    backgroundColor: "#1f7882",
-    borderTopRightRadius: 18,
-    borderTopLeftRadius: 18,
-  },
-  input: {
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.29,
-    shadowRadius: 9,
-    height: 40,
-    marginBottom: 15,
-    marginLeft: 16,
-    marginRight: 16,
-    borderWidth: 1,
-    paddingLeft: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
-    borderRadius: 10,
-    color: "black",
-  },
-
-  images: {
-    marginTop: 20,
-    height: 60,
-    width: 60,
-    alignSelf: "center",
-  },
-  box: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.56,
-    shadowRadius: 13,
-    height: 530,
-    textAlign: "center",
-    marginTop: 100,
-    marginLeft: 40,
-    marginRight: 40,
-    borderRadius: 20,
-    backgroundColor: "#F9F7F7",
-    borderColor: "#1f7882",
-    borderWidth: 1.5,
-  },
-  flexing: {
-    height: 390,
-    justifyContent: "space-evenly",
-  },
-  container: {
-    backgroundColor: "#F9F7F7",
-    height: "100%",
-    width: "100%",
-  },
-  button: {
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.29,
-    shadowRadius: 9,
-    marginLeft: 45,
-    marginRight: 45,
-    marginTop: 10,
-    marginBottom: 20,
-    elevation: 25,
-    height: 40,
-    backgroundColor: "#1f7882",
-    borderColor: "#7fffd4",
-    borderRadius: 16,
-  },
-});
 
 export default SignUp;

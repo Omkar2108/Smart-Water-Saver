@@ -43,33 +43,33 @@ function ForgotPassword({ navigation }) {
 
   return (
     <KeyboardAwareScrollView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.backgrad}></View>
-        <View style={styles.box}>
-          <View style={styles.grad}>
-            <View style={styles.imageBox}>
+      <View style={tw`h-full w-full mt-20`}>
+        <View style={tw``}>
+          <View style={tw``}>
               <Image
                 style={tw`w-30 h-30 self-center`}
                 source={require("../assets/login-1.png")}
               />
-            </View>
-            <Text style={tw`font-semibold text-3xl text-white text-center `}>
+            <Text style={tw`font-semibold text-3xl text-blue-400 text-center `}>
               Forgot Password
             </Text>
           </View>
           <View>
             <TextInput
-              style={tw`mt-5 mb-5`}
+              style={tw`my-5 text-lg mx-10`}
               label="Email"
+              mode="outlined"
+              left={<TextInput.Icon name="email-outline"/>}
               onChangeText={(text) => setEmail(text)}
               value={email}
               // textContentType="email"
             />
             <TouchableOpacity
-              style={styles.button}
+              // style={styles.button}
+              style={tw`h-auto p-2 rounded-lg bg-blue-400 mx-8`}
               onPress={() => handleSubmit()}
             >
-              <Text style={tw`font-semibold text-lg text-white text-center pt-1 `}>Send Link to Email</Text>
+              <Text style={tw`font-semibold text-xl text-white text-center`}>Send Link to Email</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -77,83 +77,5 @@ function ForgotPassword({ navigation }) {
     </KeyboardAwareScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  grad: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.26,
-    shadowRadius: 8,
-    paddingTop: 10,
-    paddingBottom: 10,
-    justifyContent: "space-between",
-    height: 180,
-    backgroundColor: "#1f7882",
-    borderTopRightRadius: 18,
-    borderTopLeftRadius: 18,
-  },
-  box: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.56,
-    shadowRadius: 13,
-    height: 370,
-    textAlign: "center",
-    marginTop: 100,
-    marginLeft: 40,
-    marginRight: 40,
-    borderRadius: 20,
-    backgroundColor: "#F9F7F7",
-    borderColor: "#1f7882",
-    borderWidth: 1.5,
-  },
-  flexing: {
-    height: 200,
-    justifyContent: "space-evenly",
-  },
-  container: {
-    backgroundColor: "#F9F7F7",
-    height: "100%",
-    width: "100%",
-  },
-  font: {
-    alignSelf: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.100000000)",
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 6,
-    fontSize: 20,
-    color: "#1f7882",
-    marginLeft: 15,
-    marginRight: 15,
-  },
-  button: {
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.29,
-    shadowRadius: 9,
-    marginLeft: 45,
-    marginRight: 45,
-    marginTop: 5,
-    elevation: 25,
-    height: 40,
-    backgroundColor: "#1f7882",
-    borderColor: "#7fffd4",
-    // padding: 12,
-    borderRadius: 16,
-  },
-  buttonText: {
-    color: "#ffff",
-    fontSize: 15,
-    marginTop: 7,
-    alignSelf: "center",
-    paddingTop: 5,
-  },
-});
 
 export default ForgotPassword;
