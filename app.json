@@ -4,6 +4,7 @@
     "slug": "water-saver",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/drop.png",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
@@ -22,6 +23,7 @@
       "package": "com.project.smartwatersaver",
       "versionCode": 1,
       "adaptiveIcon": {
+        "foregroundImage": "./assets/drop.png",
         "backgroundColor": "#FFFFFF"
       }
     },
